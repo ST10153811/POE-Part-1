@@ -1,0 +1,195 @@
+package login;
+
+import java.util.Scanner; //import the scanner class
+
+public class Login 
+{
+    String fName;
+    String lName;
+    String password;
+    String username;
+    public static Scanner keyboard = new Scanner(System.in);
+   
+    public static void main(String[] args)
+    {
+
+        String usernameEntered;
+        String passwordEntered;
+        String firstName;
+        String lastName;
+        String input = "";
+        
+        Login user1 = new Login();
+        
+        while(!input.equals("q")){
+            System.out.println("Enter 1 to REGISTER an account, or 2 to LOGIN. Enter q to QUIT");
+            input = keyboard.nextLine();
+            if(input.equals("1")){
+                System.out.println("\n-- Username must contain an underscore and is a maximum 5 characters.");
+                System.out.println("-- Password must be at least 8 characters long, must contain a capital letter, a number and a special charater.\n");
+
+                //messages to receive input from user
+                System.out.println("\nEnter a username: "); 
+                usernameEntered = keyboard.nextLine(); 
+
+                System.out.println("Enter a password: ");
+                passwordEntered = keyboard.nextLine();
+
+                System.out.println("Enter your first name: ");
+                firstName = keyboard.nextLine();
+
+                System.out.println("Enter your last name: ");
+                lastName = keyboard.nextLine();
+                System.out.println();
+                
+                
+                String registrationResults = user1.registerUser(usernameEntered, passwordEntered, firstName, lastName);
+                System.out.println(registrationResults); 
+            }
+            else if (input.equals("2")){
+                //messages to receive input from user
+                System.out.println("\nEnter your username: "); 
+                usernameEntered = keyboard.nextLine(); 
+
+                System.out.println("Enter your password: ");
+                passwordEntered = keyboard.nextLine();
+                
+                String loginResults = user1.returnLoginStatus(usernameEntered, passwordEntered);
+                System.out.println(loginResults);
+
+            } else if (input.equals("q")){
+                System.exit(0);
+            }
+        }
+
+    } 
+    
+    public static boolean checkUserName(String username)
+    {
+        boolean underscore; 
+        underscore = username.contains("_"); 
+        
+        if(username.length() <= 5 && underscore == true){   
+            return true;
+        }
+        return false; 
+    } 
+    
+    public static boolean checkPasswordComplexity(String password) 
+    {
+      int uppercaseCount;
+      int specialCharCount;
+      int digitCount;
+      int lowercaseCount;
+      char ch; //character variable to store the char
+      
+      uppercaseCount = 0;
+      specialCharCount = 0;
+      digitCount = 0;
+      lowercaseCount = 0;
+      
+      if(password.length()>=8)
+      {
+          for(int i = 0; i < password.length(); i++) 
+          {
+              ch = password.charAt(i);
+              if (Character.isUpperCase(ch))
+                  uppercaseCount++;
+              else if (Character.isLowerCase(ch))
+                  lowercaseCount++;
+              else if(Character.isDigit(ch))
+                  digitCount++;
+              else
+                  specialCharCount++;  
+           }
+          if (uppercaseCount != 0 &&
+                  digitCount != 0 && specialCharCount !=0 )
+          {
+              return true;
+          }
+          else 
+          {
+              return false;
+          }
+    } 
+     else 
+      {
+          return false; 
+      } 
+    }
+    
+    public String registerUser(String username, String password, String fName, String lName)
+    {
+
+        String outputMessageUsername;
+        String outputMessagePassword;
+        String registrationMessage;
+        String outputMessage;
+        
+        outputMessage = ""; 
+        registrationMessage = "";
+        outputMessageUsername = "";
+        outputMessagePassword = "";
+        
+        
+        if (checkUserName(username)) 
+        {
+            outputMessageUsername = "Username successfully captured \n";
+            this.username = username;
+        }
+        else 
+        {
+            outputMessageUsername = "Username is not correctly formatted, please ensure that your username contains an underscore and is no more than 5 characters in length. \n"; 
+        }
+        
+        if(checkPasswordComplexity(password))
+        {
+            outputMessagePassword = "Password successfully captured \n";
+            this.password = password;
+        }
+        else
+        {
+            outputMessagePassword = "Password is not correctly formatted, please ensure that the password contains atleast 8 characters, a capital letter, a number and a special character.\n";
+        }
+        
+        if (checkUserName(username) && checkPasswordComplexity(password)) 
+        {
+            registrationMessage = "You have been successfully registered.\n";
+            this.fName = fName;
+            this.lName = lName;
+        }
+        
+        outputMessage = outputMessageUsername + outputMessagePassword + registrationMessage;
+        return outputMessage; 
+         
+    }
+    
+    
+    
+    public Boolean loginUser(String username, String password) 
+    {
+        if (username.equals(this.username) && password.equals(this.password))
+        {
+            return true;
+        }
+        else
+        {
+           return false; 
+        }
+    }
+    
+    public String returnLoginStatus(String username, String password) 
+    {
+        String outputMessage;
+        if (loginUser(username, password))
+        {
+            outputMessage = "Welcome " + fName + " " + lName + " , it is great to see you again. ";
+        }
+        else 
+        {
+            outputMessage = "Username or password incorrect, please try again";
+        }
+        
+        return outputMessage;
+    }
+}
